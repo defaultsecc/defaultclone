@@ -2,14 +2,12 @@
 
 > Bulk GitHub repo cloner for OSINT / recon use.
 
-```text
 ██████╗ ███████╗███████╗ █████╗ ██╗   ██╗██╗  ████████╗ ██████╗██╗      ██████╗ ███╗   ██╗███████╗
 ██╔══██╗██╔════╝██╔════╝██╔══██╗██║   ██║██║  ╚══██╔══╝██╔════╝██║     ██╔═══██╗████╗  ██║██╔════╝
 ██║  ██║█████╗  █████╗  ███████║██║   ██║██║     ██║   ██║     ██║     ██║   ██║██╔██╗ ██║█████╗
 ██║  ██║██╔══╝  ██╔══╝  ██╔══██║██║   ██║██║     ██║   ██║     ██║     ██║   ██║██║╚██╗██║██╔══╝
 ██████╔╝███████╗██║     ██║  ██║╚██████╔╝███████╗██║   ╚██████╗███████╗╚██████╔╝██║ ╚████║███████╗
 ╚═════╝ ╚══════╝╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝    ╚═════╝╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
-```
 
 Given a GitHub username or organization name, Defaultclone:
 
@@ -22,8 +20,8 @@ Given a GitHub username or organization name, Defaultclone:
 
 ## Requirements
 
-* Python 3.11+
-* `git` in `PATH`
+- Python 3.11+
+- `git` in `PATH`
 
 ---
 
@@ -50,7 +48,7 @@ On first launch, Defaultclone will prompt you for a GitHub Personal Access Token
 
 Your token is stored at `~/.defaultclone/config.json` with permissions `600` (owner-read/write only on POSIX). It is **never** printed to the terminal or written to report files.
 
-To generate a token: https://github.com/settings/tokens — classic token with `repo` scope is sufficient.
+To generate a token: [https://github.com/settings/tokens](https://github.com/settings/tokens) — classic token with `repo` scope is sufficient.
 
 ---
 
@@ -95,13 +93,13 @@ python defaultclone.py someuser --token ghp_xxxx --save-token
 
 ## Token Management
 
-| Command                              | Effect                               |
+| Command | Effect |
 | ------------------------------------ | ------------------------------------ |
-| `python defaultclone.py --set-token` | Re-prompt and overwrite saved token  |
-| `python defaultclone.py --logout`    | Delete the saved token               |
-| `--token TOKEN`                      | Override for this run only           |
-| `GITHUB_TOKEN=xxx`                   | Override via env var (this run only) |
-| `--token TOKEN --save-token`         | Override and persist                 |
+| `python defaultclone.py --set-token` | Re-prompt and overwrite saved token |
+| `python defaultclone.py --logout` | Delete the saved token |
+| `--token TOKEN` | Override for this run only |
+| `GITHUB_TOKEN=xxx` | Override via env var (this run only) |
+| `--token TOKEN --save-token` | Override and persist |
 
 ---
 
@@ -157,8 +155,6 @@ These commands are intended to reduce manual effort when reviewing a large numbe
 
 ### API Keys, Tokens & Secrets
 
-Search for populated API-key, token, secret, and credential assignments:
-
 ```bash
 grep -rniE --exclude-dir=.git \
 '(^|["'\''])(api[_-]?key|apikey|api[_-]?token|access[_-]?token|auth[_-]?token|secret|client[_-]?secret|private[_-]?key)["'\'']?[[:space:]]*[:=][[:space:]]*["'\'']?[A-Za-z0-9_./+=-]{8,}' \
@@ -166,8 +162,6 @@ cloned/
 ```
 
 ### Cloud & Service Credentials
-
-Search for common cloud and third-party credential variable names:
 
 ```bash
 grep -rniE --exclude-dir=.git \
@@ -177,8 +171,6 @@ cloned/
 
 ### Environment Credentials
 
-Search `.env`-style configuration files for populated credential values:
-
 ```bash
 grep -rniE --exclude-dir=.git \
 '^[A-Za-z0-9_]*(KEY|TOKEN|SECRET|PASSWORD|PASS|CREDENTIAL)[A-Za-z0-9_]*[[:space:]]*=[[:space:]]*[^[:space:]#]{4,}' \
@@ -186,8 +178,6 @@ cloned/
 ```
 
 ### Private Keys
-
-Search for accidentally committed private-key material:
 
 ```bash
 grep -rniE --exclude-dir=.git \
@@ -243,22 +233,22 @@ Do not publish or commit discovered credentials. Keep sensitive values redacted 
 
 ## Architecture
 
-| File              | Responsibility                                |
+| File | Responsibility |
 | ----------------- | --------------------------------------------- |
-| `defaultclone.py` | Entry point, CLI parsing, orchestration       |
-| `auth.py`         | Token prompt, save/load/validate, config      |
-| `github_api.py`   | Repo listing, pagination, rate-limit handling |
-| `cloner.py`       | Threaded git clone, retry, skip logic         |
-| `ui.py`           | Rich banner, progress bar, tables, theme      |
-| `report.py`       | Writes `report.json` / `report.log`           |
+| `defaultclone.py` | Entry point, CLI parsing, orchestration |
+| `auth.py` | Token prompt, save/load/validate, config |
+| `github_api.py` | Repo listing, pagination, rate-limit handling |
+| `cloner.py` | Threaded git clone, retry, skip logic |
+| `ui.py` | Rich banner, progress bar, tables, theme |
+| `report.py` | Writes `report.json` / `report.log` |
 
 ---
 
 ## Rate Limits
 
-| Scenario   | Limit                 |
+| Scenario | Limit |
 | ---------- | --------------------- |
-| No token   | 60 requests / hour    |
+| No token | 60 requests / hour |
 | With token | 5 000 requests / hour |
 
 If you hit the limit, Defaultclone prints the reset time and suggests adding a token.
